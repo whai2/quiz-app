@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import toast, { Toaster } from 'react-hot-toast';
 
 import MultipleChoice from "@/components/quiz/MultipleChoice";
 
@@ -9,18 +10,20 @@ function Quiz() {
   const [quizNumber, setQuizNumber] = useState(0);
   const [quizList, setQuizList] = useState<MultipleChoiceProps[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-  const [showNextButton, setShowNextButton] = useState<boolean>(false);
+  // const [showNextButton, setShowNextButton] = useState<boolean>(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
   const handleAnswerClick = (answer: string) => {
     setSelectedAnswer(answer);
-    setShowNextButton(true);
-    setIsCorrect(answer === quizList[quizNumber].correct_answer);
+    // setShowNextButton(true);
+    const correct = answer === quizList[quizNumber].correct_answer;
+    setIsCorrect(correct);
+    toast(correct ? 'Correct!' : 'Incorrect!');
   };
 
   const handleNextClick = () => {
     setSelectedAnswer(null);
-    setShowNextButton(false);
+    // setShowNextButton(false);
     setIsCorrect(null);
     setQuizNumber((prevNumber) => prevNumber + 1);
   };
@@ -60,6 +63,7 @@ function Quiz() {
       >
         다음 문제
       </button>
+      <Toaster />
     </div>
   );
 }
