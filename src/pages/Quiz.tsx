@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from 'react-hot-toast';
 
 import MultipleChoice from "@/components/quiz/MultipleChoice";
@@ -7,15 +8,15 @@ import { quizRequests } from "@/apis/quiz/quiz.api";
 import { MultipleChoiceProps } from "@/apis/quiz/quiz.type";
 
 function Quiz() {
+  const navigate = useNavigate();
+
   const [quizNumber, setQuizNumber] = useState(0);
   const [quizList, setQuizList] = useState<MultipleChoiceProps[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
-  // const [showNextButton, setShowNextButton] = useState<boolean>(false);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
   const handleAnswerClick = (answer: string) => {
     setSelectedAnswer(answer);
-    // setShowNextButton(true);
     const correct = answer === quizList[quizNumber].correct_answer;
     setIsCorrect(correct);
   };
@@ -23,10 +24,16 @@ function Quiz() {
   const handleNextClick = () => {
     toast(isCorrect ? 'Correct!' : 'Incorrect!');
     
-    setSelectedAnswer(null);
-    setIsCorrect(null);
-    
-    setQuizNumber((prevNumber) => prevNumber + 1);
+    setTimeout(() => {
+      if (quizNumber + 1 < quizList.length) {
+        setSelectedAnswer(null);
+        setIsCorrect(null);
+
+        setQuizNumber((prevNumber) => prevNumber + 1);
+      } else {
+        navigate('/result');
+      }
+    }, 500); 
   };
 
   useEffect(() => {
