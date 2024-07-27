@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import { MultipleChoiceProps } from "@/apis/quiz/quiz.type";
 import { shuffleArray, decodeHtmlEntities } from "./quiz.util";
 
@@ -13,7 +15,10 @@ function MultipleChoice({
   incorrect_answers,
   handleAnswerClick,
 }: MultipleChoiceWithHandlerProps) {
-  const allAnswers = shuffleArray([...incorrect_answers, correct_answer]);
+  const allAnswers = useMemo(
+    () => shuffleArray([...incorrect_answers, correct_answer]),
+    [incorrect_answers, correct_answer]
+  );
 
   return (
     <li className="multiple-choice">
@@ -23,7 +28,9 @@ function MultipleChoice({
       <ul>
         {allAnswers.map((answer, index) => (
           <li key={index}>
-            <button onClick={() => handleAnswerClick(answer)}>{decodeHtmlEntities(answer)}</button>
+            <button onClick={() => handleAnswerClick(answer)}>
+              {decodeHtmlEntities(answer)}
+            </button>
           </li>
         ))}
       </ul>

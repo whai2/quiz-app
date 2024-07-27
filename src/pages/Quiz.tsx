@@ -18,13 +18,14 @@ function Quiz() {
     // setShowNextButton(true);
     const correct = answer === quizList[quizNumber].correct_answer;
     setIsCorrect(correct);
-    toast(correct ? 'Correct!' : 'Incorrect!');
   };
 
   const handleNextClick = () => {
+    toast(isCorrect ? 'Correct!' : 'Incorrect!');
+    
     setSelectedAnswer(null);
-    // setShowNextButton(false);
     setIsCorrect(null);
+    
     setQuizNumber((prevNumber) => prevNumber + 1);
   };
 
