@@ -1,7 +1,5 @@
 function IncorrectNote() {
-  return (
-    <div>IncorrectNote</div>
-  )
+  return <div>IncorrectNote</div>;
 }
 
-export default IncorrectNote
+export default IncorrectNote;
