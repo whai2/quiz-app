@@ -1,6 +1,12 @@
-function Button() {
+import React from 'react';
+
+interface ButtonProps {
+  onClick: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+function Button({onClick}: ButtonProps) {
   return (
-    <button>퀴즈 시작</button>
+    <button onClick={onClick}>퀴즈 시작</button>
   )
 }
 

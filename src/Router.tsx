@@ -5,12 +5,7 @@ import Quiz from "@/pages/Quiz";
 import Result from "@/pages/Result";
 import IncorrectNote from "@/pages/IncorrectNote";
 
-const routes = {
-  home: "/",
-  quiz: "/quiz",
-  result: "/result",
-  incorrectNote: "/incorrectNote",
-};
+import routes from "@/constants/routes";
 
 const router = createBrowserRouter([
   {
