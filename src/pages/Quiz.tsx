@@ -6,8 +6,24 @@ import { quizRequests } from "@/apis/quiz/quiz.api";
 import { MultipleChoiceProps } from "@/apis/quiz/quiz.type";
 
 function Quiz() {
-  // const [quizNumber, setQuizNumber] = useState(0);
-  const [quizList, setQuizList] = useState([]);
+  const [quizNumber, setQuizNumber] = useState(0);
+  const [quizList, setQuizList] = useState<MultipleChoiceProps[]>([]);
+  const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
+  const [showNextButton, setShowNextButton] = useState<boolean>(false);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
+
+  const handleAnswerClick = (answer: string) => {
+    setSelectedAnswer(answer);
+    setShowNextButton(true);
+    setIsCorrect(answer === quizList[quizNumber].correct_answer);
+  };
+
+  const handleNextClick = () => {
+    setSelectedAnswer(null);
+    setShowNextButton(false);
+    setIsCorrect(null);
+    setQuizNumber((prevNumber) => prevNumber + 1);
+  };
 
   useEffect(() => {
     const getQuiz = async () => {
@@ -25,22 +41,25 @@ function Quiz() {
     getQuiz();
   }, []);
 
+  if (!quizList.length) return <div>Loading...</div>;
+  
   return (
     <div>
       <h1>Quiz Questions</h1>
-      <ul>
-        {!!quizList.length &&
-          quizList.map((quiz: MultipleChoiceProps, index) => (
-            <MultipleChoice
-              question={quiz.question}
-              category={quiz.category}
-              correct_answer={quiz.correct_answer}
-              difficulty={quiz.difficulty}
-              incorrect_answers={quiz.incorrect_answers}
-              key={index}
-            />
-          ))}
-      </ul>
+        <MultipleChoice
+          question={quizList[quizNumber].question}
+          category={quizList[quizNumber].category}
+          correct_answer={quizList[quizNumber].correct_answer}
+          difficulty={quizList[quizNumber].difficulty}
+          incorrect_answers={quizList[quizNumber].incorrect_answers}
+          handleAnswerClick={handleAnswerClick}
+        />
+      <button 
+        onClick={handleNextClick}
+        disabled={!selectedAnswer}
+      >
+        다음 문제
+      </button>
     </div>
   );
 }

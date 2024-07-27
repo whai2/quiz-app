@@ -1,13 +1,18 @@
 import { MultipleChoiceProps } from "@/apis/quiz/quiz.type";
 import { shuffleArray, decodeHtmlEntities } from "./quiz.util";
 
+interface MultipleChoiceWithHandlerProps extends MultipleChoiceProps {
+  handleAnswerClick: (answer: string) => void;
+}
+
 function MultipleChoice({
   question,
   category,
   correct_answer,
   difficulty,
   incorrect_answers,
-}: MultipleChoiceProps) {
+  handleAnswerClick,
+}: MultipleChoiceWithHandlerProps) {
   const allAnswers = shuffleArray([...incorrect_answers, correct_answer]);
 
   return (
@@ -18,7 +23,7 @@ function MultipleChoice({
       <ul>
         {allAnswers.map((answer, index) => (
           <li key={index}>
-            <button>{decodeHtmlEntities(answer)}</button>
+            <button onClick={() => handleAnswerClick(answer)}>{decodeHtmlEntities(answer)}</button>
           </li>
         ))}
       </ul>
