@@ -28,7 +28,7 @@ function Quiz() {
   };
 
   const handleNextClick = () => {
-    toast(isCorrect ? "Correct!" : "Incorrect!");
+    toast(isCorrect ? "정답입니다!" : "오답입니다.");
 
     if (isCorrect) {
       incrementCorrect();
