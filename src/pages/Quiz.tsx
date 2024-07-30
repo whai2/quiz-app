@@ -1,29 +1,30 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 
 import MultipleChoice from "@/components/quiz/MultipleChoice";
 
-import { quizRequests } from "@/apis/quiz/quiz.api";
-import { MultipleChoiceProps } from "@/apis/quiz/quiz.type";
 import useRecodeResults from "@/hooks/zustand/useRecodeResults";
+import { useGetQuiz } from "@/hooks/query/useGetQuiz";
 
 function Quiz() {
   const navigate = useNavigate();
 
   // 지역 상태
   const [quizNumber, setQuizNumber] = useState(0);
-  const [quizList, setQuizList] = useState<MultipleChoiceProps[]>([]);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
 
+  // 서버 상태
+  const { data } = useGetQuiz();
+
   // 전역 상태
-  const { incrementCorrect, incrementIncorrect, setStartTime, setEndTime } =
+  const { incrementCorrect, incrementIncorrect, setEndTime } =
     useRecodeResults();
 
   const handleAnswerClick = (answer: string) => {
     setSelectedAnswer(answer);
-    const correct = answer === quizList[quizNumber].correct_answer;
+    const correct = answer === data.results[quizNumber].correct_answer;
     setIsCorrect(correct);
   };
 
@@ -37,7 +38,7 @@ function Quiz() {
     }
 
     setTimeout(() => {
-      if (quizNumber + 1 < quizList.length) {
+      if (quizNumber + 1 < data.results.length) {
         setSelectedAnswer(null);
         setIsCorrect(null);
 
@@ -49,35 +50,19 @@ function Quiz() {
     }, 500);
   };
 
-  useEffect(() => {
-    const getQuiz = async () => {
-      try {
-        const { results } = await quizRequests();
-        setQuizList(results);
-        setStartTime(new Date()); // 시작 시간 기록
-        console.log(results);
-      } catch (error) {
-        // setError('Failed to fetch data');
-      } finally {
-        // setLoading(false);
-      }
-    };
-
-    getQuiz();
-  }, []);
-
-  if (!quizList.length) return <div>Loading...</div>;
+  if (!data) return <div>Loading...</div>;
 
   return (
     <div>
       <h1>Quiz Questions</h1>
       <MultipleChoice
-        question={quizList[quizNumber].question}
-        category={quizList[quizNumber].category}
-        correct_answer={quizList[quizNumber].correct_answer}
-        difficulty={quizList[quizNumber].difficulty}
-        incorrect_answers={quizList[quizNumber].incorrect_answers}
+        question={data.results[quizNumber].question}
+        category={data.results[quizNumber].category}
+        correct_answer={data.results[quizNumber].correct_answer}
+        difficulty={data.results[quizNumber].difficulty}
+        incorrect_answers={data.results[quizNumber].incorrect_answers}
         handleAnswerClick={handleAnswerClick}
+        clickedAnswer={selectedAnswer}
       />
       <button onClick={handleNextClick} disabled={!selectedAnswer}>
         다음 문제

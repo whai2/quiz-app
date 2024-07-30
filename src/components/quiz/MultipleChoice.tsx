@@ -3,8 +3,15 @@ import { useMemo } from "react";
 import { MultipleChoiceProps } from "@/apis/quiz/quiz.type";
 import { shuffleArray, decodeHtmlEntities } from "./quiz.util";
 
+import styled from 'styled-components';
+
 interface MultipleChoiceWithHandlerProps extends MultipleChoiceProps {
   handleAnswerClick: (answer: string) => void;
+  clickedAnswer: string | null;
+}
+
+interface AnswerButtonProps {
+  isClicked: boolean;
 }
 
 function MultipleChoice({
@@ -14,6 +21,7 @@ function MultipleChoice({
   difficulty,
   incorrect_answers,
   handleAnswerClick,
+  clickedAnswer
 }: MultipleChoiceWithHandlerProps) {
   const allAnswers = useMemo(
     () => shuffleArray([...incorrect_answers, correct_answer]),
@@ -28,9 +36,9 @@ function MultipleChoice({
       <ul>
         {allAnswers.map((answer, index) => (
           <li key={index}>
-            <button onClick={() => handleAnswerClick(answer)}>
+            <S.AnswerButton onClick={() => handleAnswerClick(answer)} isClicked={clickedAnswer === answer}>
               {decodeHtmlEntities(answer)}
-            </button>
+            </S.AnswerButton>
           </li>
         ))}
       </ul>
@@ -39,3 +47,14 @@ function MultipleChoice({
 }
 
 export default MultipleChoice;
+
+const S = {
+  AnswerButton: styled.button<AnswerButtonProps>`
+    background-color: ${props => (props.isClicked ? 'skyblue' : 'white')};
+    color: ${props => (props.isClicked ? 'white' : 'black')};
+    border: 1px solid ${props => (props.isClicked ? 'skyblue' : 'black')};
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+  `
+};
