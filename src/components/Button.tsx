@@ -2,10 +2,11 @@ import React from "react";
 
 interface ButtonProps {
   onClick: React.MouseEventHandler<HTMLButtonElement>;
+  children: React.ReactNode;
 }
 
-function Button({ onClick }: ButtonProps) {
-  return <button onClick={onClick}>퀴즈 시작</button>;
+function Button({ onClick, children }: ButtonProps) {
+  return <button onClick={onClick}>{children}</button>;
 }
 
 export default Button;

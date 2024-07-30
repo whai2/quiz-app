@@ -1,25 +1,31 @@
-import { create } from 'zustand';
+import { create } from "zustand";
 
 interface QuizState {
-  correctAnswers: number;
-  incorrectAnswers: number;
+  correctAnswerList: number[];
+  incorrectAnswerList: number[];
   startTime: Date | null;
   endTime: Date | null;
-  incrementCorrect: () => void;
-  incrementIncorrect: () => void;
+  addCorrectAnswer: (answerIndex: number) => void;
+  addIncorrectAnswer: (answerIndex: number) => void;
   setStartTime: (time: Date) => void;
   setEndTime: (time: Date) => void;
 }
 
 const useRecodeResults = create<QuizState>((set) => ({
-  correctAnswers: 0,
-  incorrectAnswers: 0,
+  correctAnswerList: [],
+  incorrectAnswerList: [],
   startTime: null,
   endTime: null,
-  incrementCorrect: () => set((state) => ({ correctAnswers: state.correctAnswers + 1 })),
-  incrementIncorrect: () => set((state) => ({ incorrectAnswers: state.incorrectAnswers + 1 })),
+  addCorrectAnswer: (answerIndex: number) =>
+    set((state) => ({
+      correctAnswerList: [...state.correctAnswerList, answerIndex],
+    })),
+  addIncorrectAnswer: (answerIndex: number) =>
+    set((state) => ({
+      incorrectAnswerList: [...state.incorrectAnswerList, answerIndex],
+    })),
   setStartTime: (time: Date) => set({ startTime: time }),
   setEndTime: (time: Date) => set({ endTime: time }),
 }));
 
-export default useRecodeResults
+export default useRecodeResults;

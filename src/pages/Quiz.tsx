@@ -19,7 +19,7 @@ function Quiz() {
   const { data } = useGetQuiz();
 
   // 전역 상태
-  const { incrementCorrect, incrementIncorrect, setEndTime } =
+  const { addCorrectAnswer, addIncorrectAnswer, setEndTime } =
     useRecodeResults();
 
   const handleAnswerClick = (answer: string) => {
@@ -32,9 +32,9 @@ function Quiz() {
     toast(isCorrect ? "정답입니다!" : "오답입니다.");
 
     if (isCorrect) {
-      incrementCorrect();
+      addCorrectAnswer(quizNumber);
     } else {
-      incrementIncorrect();
+      addIncorrectAnswer(quizNumber);
     }
 
     setTimeout(() => {
